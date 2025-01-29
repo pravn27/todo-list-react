@@ -1,4 +1,3 @@
-// filepath: src/TodoItem.js
 import React from "react";
 
 function TodoItem({ todo, toggleComplete, deleteTodo }) {

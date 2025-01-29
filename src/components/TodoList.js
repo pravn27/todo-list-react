@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import TodoItem from "./TodoItem";
+import { Card, Input, List, Button, Space, Modal } from "antd";
+import { PlusOutlined, DeleteOutlined, CheckOutlined } from "@ant-design/icons";
 
 function TodoList() {
   const [todos, setTodos] = useState([]);
@@ -29,24 +30,82 @@ function TodoList() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  // Add new reset function
+  const resetTodos = () => {
+    Modal.confirm({
+      title: "Are you sure you want to reset all todos?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk: () => {
+        setTodos([]);
+      },
+    });
+  };
+
   return (
-    <div>
-      <input
-        type="text"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-        onKeyPress={handleKeyPress}
-      />
-      <button onClick={addTodo}>Add Todo</button>
-      {todos.map((todo) => (
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          toggleComplete={toggleComplete}
-          deleteTodo={deleteTodo}
+    <Card>
+      <Space.Compact style={{ width: "100%", marginBottom: "20px" }}>
+        <Input
+          placeholder="Add a new todo"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+          onPressEnter={addTodo}
+          size="large"
+          onKeyPress={handleKeyPress}
         />
-      ))}
-    </div>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={addTodo}
+          size="large"
+        >
+          Add
+        </Button>
+        <Button
+          type="primary"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={resetTodos}
+          size="large"
+          disabled={todos.length === 0}
+        >
+          Reset
+        </Button>
+      </Space.Compact>
+
+      <List
+        dataSource={todos}
+        renderItem={(todo) => (
+          <List.Item
+            key={todo.id}
+            actions={[
+              <Button
+                type={todo.completed ? "primary" : "default"}
+                icon={<CheckOutlined />}
+                onClick={() => toggleComplete(todo.id)}
+              />,
+              <Button
+                type="text"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => deleteTodo(todo.id)}
+              />,
+            ]}
+          >
+            <span
+              style={{
+                textDecoration: todo.completed ? "line-through" : "none",
+                color: todo.completed ? "#999" : "inherit",
+              }}
+            >
+              {todo.text}
+            </span>
+          </List.Item>
+        )}
+      />
+    </Card>
   );
 }
 
