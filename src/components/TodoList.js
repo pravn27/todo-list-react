@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, Input, List, Button, Space, Modal } from "antd";
-import { PlusOutlined, DeleteOutlined, CheckOutlined } from "@ant-design/icons";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "../utils/localStorage";
+import TodoItem from "./TodoItem";
 
 function TodoList() {
   const [todos, setTodos] = useState(() => loadFromLocalStorage("todos", []));
@@ -52,6 +53,12 @@ function TodoList() {
       },
     });
   };
+  // Add updateTodo function in TodoList component
+  const updateTodo = (id, newText) => {
+    setTodos(
+      todos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
+    );
+  };
 
   return (
     <Card>
@@ -87,31 +94,12 @@ function TodoList() {
       <List
         dataSource={todos}
         renderItem={(todo) => (
-          <List.Item
-            key={todo.id}
-            actions={[
-              <Button
-                type={todo.completed ? "primary" : "default"}
-                icon={<CheckOutlined />}
-                onClick={() => toggleComplete(todo.id)}
-              />,
-              <Button
-                type="text"
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => deleteTodo(todo.id)}
-              />,
-            ]}
-          >
-            <span
-              style={{
-                textDecoration: todo.completed ? "line-through" : "none",
-                color: todo.completed ? "#999" : "inherit",
-              }}
-            >
-              {todo.text}
-            </span>
-          </List.Item>
+          <TodoItem
+            todo={todo}
+            toggleComplete={toggleComplete}
+            deleteTodo={deleteTodo}
+            updateTodo={updateTodo}
+          />
         )}
       />
     </Card>
