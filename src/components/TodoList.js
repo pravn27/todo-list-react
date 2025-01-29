@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Input, List, Button, Space, Modal } from "antd";
 import { PlusOutlined, DeleteOutlined, CheckOutlined } from "@ant-design/icons";
+import {
+  loadFromLocalStorage,
+  saveToLocalStorage,
+} from "../utils/localStorage";
 
 function TodoList() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(() => loadFromLocalStorage("todos", []));
   const [newTodo, setNewTodo] = useState("");
+
+  // Save todos to localStorage whenever they change
+  useEffect(() => {
+    saveToLocalStorage("todos", todos);
+  }, [todos]);
 
   const addTodo = () => {
     if (newTodo.trim() === "") return;
