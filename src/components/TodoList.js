@@ -5,7 +5,7 @@ import {
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "../utils/localStorage";
-import TodoItem from "./TodoItem";
+import TodoItem from "./TodoItem/TodoItem";
 
 function TodoList() {
   const [todos, setTodos] = useState(() => loadFromLocalStorage("todos", []));
