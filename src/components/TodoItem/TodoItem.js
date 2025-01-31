@@ -26,7 +26,6 @@ function TodoItem({ todo, toggleComplete, deleteTodo, updateTodo }) {
 
   return (
     <ListItemStyled
-      className="todo-item"
       key={todo.id}
       actions={[
         <Button
@@ -43,6 +42,7 @@ function TodoItem({ todo, toggleComplete, deleteTodo, updateTodo }) {
       ]}
     >
       <div
+        className="todo-item"
         style={{
           display: "flex",
           alignItems: "center",

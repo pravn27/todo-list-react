@@ -10,17 +10,15 @@ export const EditOutlinedStyled = styled(EditOutlined)`
 `;
 
 export const ListItemStyled = styled(List.Item)`
-  &&&& {
-    .todo-item:hover span.hover-edit-icon {
-      opacity: 1 !important;
-    }
+  .todo-item:hover span.hover-edit-icon {
+    opacity: 1 !important;
+  }
 
-    .edit-button {
-      visibility: hidden;
-    }
+  .edit-button {
+    visibility: hidden;
+  }
 
-    .todo-item:hover .edit-button {
-      visibility: visible;
-    }
+  .todo-item:hover .edit-button {
+    visibility: visible;
   }
 `;
