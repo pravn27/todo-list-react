@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Card, Input, List, Button, Space, Modal } from "antd";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
@@ -10,11 +14,17 @@ import TodoItem from "./TodoItem/TodoItem";
 function TodoList() {
   const [todos, setTodos] = useState(() => loadFromLocalStorage("todos", []));
   const [newTodo, setNewTodo] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   // Save todos to localStorage whenever they change
   useEffect(() => {
     saveToLocalStorage("todos", todos);
   }, [todos]);
+
+  // Filter todos based on search
+  const filteredTodos = todos.filter((todo) =>
+    todo.text.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const addTodo = () => {
     if (newTodo.trim() === "") return;
@@ -62,37 +72,49 @@ function TodoList() {
 
   return (
     <Card>
-      <Space.Compact style={{ width: "100%", marginBottom: "20px" }}>
+      <Space
+        direction="vertical"
+        style={{ width: "100%", marginBottom: "20px" }}
+      >
         <Input
-          placeholder="Add a new todo"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          onPressEnter={addTodo}
-          size="large"
-          onKeyPress={handleKeyPress}
+          placeholder="Search todos..."
+          prefix={<SearchOutlined />}
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          allowClear
         />
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={addTodo}
-          size="large"
-        >
-          Add
-        </Button>
-        <Button
-          type="primary"
-          danger
-          icon={<DeleteOutlined />}
-          onClick={resetTodos}
-          size="large"
-          disabled={todos.length === 0}
-        >
-          Reset
-        </Button>
-      </Space.Compact>
+        <Space.Compact style={{ width: "100%" }}>
+          <Input
+            placeholder="Add a new todo"
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            onPressEnter={addTodo}
+            size="large"
+            onKeyPress={handleKeyPress}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={addTodo}
+            size="large"
+          >
+            Add
+          </Button>
+          <Button
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={resetTodos}
+            size="large"
+            disabled={todos.length === 0}
+          >
+            Reset
+          </Button>
+        </Space.Compact>
+      </Space>
 
       <List
-        dataSource={todos}
+        dataSource={filteredTodos}
         renderItem={(todo) => (
           <TodoItem
             todo={todo}
